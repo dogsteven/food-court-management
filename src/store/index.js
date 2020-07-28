@@ -15,7 +15,8 @@ export default new Vuex.Store({
       email: null
     },
 
-    foods: []
+    foods: [],
+    orders: []
   },
   mutations: {
     setAccount(state, {id, vendorID, username, password, firstname, lastname, email}) {
@@ -30,6 +31,10 @@ export default new Vuex.Store({
 
     pushFoodItem(state, item) {
       state.foods.push(item)
+    },
+
+    pushOrderItem(state, item) {
+      state.orders.push(item)
     },
 
     modifyFoodItem(state, { id, name, price, categories, description, photo }) {
