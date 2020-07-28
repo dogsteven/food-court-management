@@ -11,10 +11,10 @@
           max-height="200">
         </v-img>
         <v-card-title>
-          {{ item.name }}
+          {{ item.name}}
         </v-card-title>
         <v-card-subtitle>
-          Price {{ item.price }}VND
+          Price {{ item.price }} VND
         </v-card-subtitle>
       </v-card>
     </v-list>
@@ -30,8 +30,8 @@ export default {
       http.server.get('manager/food-item/' + this.$store.state.account.vendorID)
         .then((response) => response.data)
         .then((foods) => {
-          foods.forEach((item) => {
-            this.$store.commit('pushFoodItem', item)
+          Object.keys(foods).forEach((key) => {
+            this.$store.commit('pushFoodItem', [{id: key}].concat(foods[key]))
           })
         })
     }

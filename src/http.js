@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-let serverURL = "http://localhost/api/"
+let serverURL = "http://localhost:8000/api/"
 
 export default {
     server: {
