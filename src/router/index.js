@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Menu from '../views/menu'
 import ItemDetail from '../views/menu/item-detal'
 import SignIn from '../views/sign-in'
+import Order from '../views/order'
 
 Vue.use(VueRouter)
 
@@ -18,6 +19,10 @@ const routes = [
   {
     path: '/menu',
     component: Menu
+  },
+  {
+    path: '/Order',
+    component: Order
   },
   {
     path: '*',

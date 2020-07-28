@@ -14,6 +14,13 @@
           <v-list-item-title>Menu</v-list-item-title>
         </v-list-item>
         <v-list-item
+          to='/order'>
+          <v-list-item-icon>
+            <v-icon>fas fa-hamburger</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Order</v-list-item-title>
+        </v-list-item>
+        <v-list-item
           @click="signout">
           <v-list-item-icon>
             <v-icon>fas fa-sign-out-alt</v-icon>
@@ -33,7 +40,7 @@
         <v-icon>mdi-menu</v-icon>
       </v-btn>
       <v-toolbar-title>
-        {{ $route.path === '/menu' ? 'Menu' : ($store.state.foods[$store.state.foods.findIndex(i => i.id === $route.params.id)].name) }}
+        {{ $route.path === '/menu' ? 'Menu' : $route.path === '/order'  ? 'Order' : ($store.state.foods[$store.state.foods.findIndex(i => i.id === $route.params.id)].name) }}
       </v-toolbar-title>
       <v-spacer></v-spacer>
 
