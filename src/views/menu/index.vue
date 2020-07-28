@@ -4,11 +4,12 @@
       <v-card
         v-for="(item, index) in $store.state.foods"
         :key="index"
-        class="my-3"
-        :to="'/item-detail/' + item.id">
+        class="my-3 mx-auto"
+        :to="'/item-detail/' + item.id"
+        max-width="600">
         <v-img
           :src="item.photo"
-          max-height="200">
+          aspect-ratio="1">
         </v-img>
         <v-card-title>
           {{ item.name }}

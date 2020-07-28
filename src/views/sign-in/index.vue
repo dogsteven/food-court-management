@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-card
-      max-width="600"
+      max-width="400"
       class="mx-auto">
       <v-card-title>
         Smart Food Court Manager
