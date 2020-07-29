@@ -1,114 +1,88 @@
-<style>
-  .custom-loader {
-    animation: loader 1s infinite;
-    display: flex;
-  }
-  @-moz-keyframes loader {
-    from {
-      transform: rotate(0);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  @-webkit-keyframes loader {
-    from {
-      transform: rotate(0);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  @-o-keyframes loader {
-    from {
-      transform: rotate(0);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  @keyframes loader {
-    from {
-      transform: rotate(0);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-</style>
 <template>
   <v-container>
-    <v-btn
-      class="ma-2"
-      :loading="this.loading"
-      :disabled="this.loading"
-      color="secondary"
-      @click="this.loader = 'loading'"
-    >
-      Accept Terms
-    </v-btn>
-
-    <v-btn
-      :loading="this.loading3"
-      :disabled="this.loading3"
-      color="blue-grey"
-      class="ma-2 white--text"
-      @click="this.loader = 'loading3'"
-    >
-      Upload
-      <v-icon right dark>mdi-cloud-upload</v-icon>
-    </v-btn>
-
-    <v-btn
-      class="ma-2"
-      :loading="this.loading2"
-      :disabled="this.loading2"
-      color="success"
-      @click="thisloader = 'loading2'"
-    >
-      Custom Loader
-      <template v-slot:loader>
-        <span>Loading...</span>
-      </template>
-    </v-btn>
-
-    <v-btn
-      class="ma-2"
-      :loading="this.loading4"
-      :disabled="this.loading4"
-      color="info"
-      @click="this.loader = 'loading4'"
-    >
-      Icon Loader
-      <template v-slot:loader>
-        <span class="custom-loader">
-          <v-icon light>cached</v-icon>
-        </span>
-      </template>
-    </v-btn>
-
-    <v-btn
-      :loading="this.loading5"
-      :disabled="this.loading5"
-      color="blue-grey"
-      class="ma-2 white--text"
-      fab
-      @click="this.loader = 'loading5'"
-    >
-      <v-icon dark>mdi-cloud-upload</v-icon>
-    </v-btn>
     <v-list>
       <v-card
-        v-for="(item, index) in $store.state.orders"
+        v-for="(item, index) in this.ordersDetail"
         :key="index"
         class="my-3">
-        <v-img
-          :src="item.photo"
-          max-height="200">
-        </v-img>
-        <v-card-title>
-          {{ item.customerID }}
-        </v-card-title>
+        <v-card
+          class="mx-auto"
+          max-width="1200"
+        >
+
+          <v-card-title>
+            Bill number:  {{ index }}
+          </v-card-title>
+
+          <v-card-subtitle>
+            Brief: {{item[0].name}}...
+          </v-card-subtitle>
+
+          <v-card-actions>
+            <v-btn text>Done</v-btn>
+
+            <v-btn
+              color="purple"
+              text
+              @click="acceptBill(index)"
+            >
+              Accept Bill
+            </v-btn>
+
+            <v-spacer></v-spacer>
+
+            <v-btn
+              icon
+              @click="show = !show"
+            >
+              <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+            </v-btn>
+          </v-card-actions>
+
+          <v-expand-transition>
+            <div v-show="show">
+              <v-divider></v-divider>
+              <v-card
+                v-for="(food, idx) in item"
+                :key="idx"
+                class="my-3">
+                <!-- ------------------------------------------- -->
+                <v-row
+                  align="center"
+                  class="spacer"
+                  no-gutters
+                >
+                  <v-col
+                    cols="4"
+                    sm="1"
+                    md="1"
+                  >
+                    <v-avatar
+                      size="60px"
+                    >
+                      <img
+                        :src= "food.photo"
+                      >
+                    </v-avatar>
+                  </v-col>
+                  <v-col
+                    cols="10"
+                    sm="5"
+                    md="1"
+                  >
+                  <v-card-title>
+                    {{food.name}}
+                  </v-card-title>
+                  <v-card-subtitle>
+                    Quantity: {{food.quantity}}
+                  </v-card-subtitle>
+                  </v-col>
+                </v-row>
+                <!-- +++++++++++++++++++++++++++++++++++++++++++++== -->
+              </v-card>
+            </div>
+          </v-expand-transition>
+        </v-card>
       </v-card>
     </v-list>
   </v-container>
@@ -121,41 +95,31 @@ import http from '../../http'
 
 export default {
   data: () => ({
-     data () {
-      return {
-        loader: null,
-        loading: false,
-        loading2: false,
-        loading3: false,
-        loading4: false,
-        loading5: false,
-      }
-    },
-    watch: {
-      loader () {
-        const l = this.loader
-        this[l] = !this[l]
-
-        setTimeout(() => (this[l] = false), 3000)
-
-        this.loader = null
-      },
-    },
+    show: false,
+    ordersDetail: [],
+    imgsrc: ''
   }),
 
   created() {
-    if (this.$store.state.foods.length === 0) {
-      http.server.get('manager/unpaidorder/' + this.$store.state.account.vendorID)
-        .then((response) => response.data)
-        .then((orders) => {
-          console.log(orders)
-          const arrOrders = Object.keys(orders).map(i => orders[i])
-          arrOrders.forEach((item) => {
-            this.$store.commit('pushOrderItem', item)
+    this.$store.state.orders= []
+    http.server.get('manager/unpaidorder/' + this.$store.state.account.vendorID)
+      .then((response) => response.data)
+      .then((orders) => {
+        const arrOrders = Object.keys(orders).map(i => Object.assign({}, {'id': i}, orders[i]))
+        arrOrders.forEach((item) => {
+          let listFoods = []
+          item.items.forEach(item => {
+            let index = this.$store.state.foods.findIndex((element) => element.id == item.foodID)
+            if (index > -1) {
+              listFoods.push(this.$store.state.foods[index])
+            }
           })
+          if (listFoods.length > 0) {
+            this.ordersDetail.push(listFoods)
+          }
+          this.$store.commit('pushOrderItem', item)
         })
-    }
-  }
-  
+      })
+  },
 }
 </script>

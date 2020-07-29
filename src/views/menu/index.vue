@@ -30,7 +30,7 @@ export default {
       http.server.get('manager/food-item/' + this.$store.state.account.vendorID)
         .then((response) => response.data)
         .then((foods) => {
-          const arrFoods = Object.keys(foods).map(i => foods[i])
+          const arrFoods = Object.keys(foods).map(i => Object.assign({}, {'id': i}, foods[i]))
           arrFoods.forEach((item) => {
             this.$store.commit('pushFoodItem', item)
           })

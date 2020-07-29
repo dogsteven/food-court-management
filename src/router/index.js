@@ -21,7 +21,7 @@ const routes = [
     component: Menu
   },
   {
-    path: '/Order',
+    path: '/order',
     component: Order
   },
   {
