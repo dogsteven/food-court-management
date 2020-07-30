@@ -19,28 +19,50 @@
           </v-card-subtitle>
 
           <v-card-actions>
-            <v-btn text>Done</v-btn>
+            <v-btn
+              color="purple"
+              text
+              @click="paid(index)"
+            >
+              Paid
+            </v-btn>
 
             <v-btn
               color="purple"
               text
-              @click="acceptBill(index)"
+              @click="prepare(index)"
             >
-              Accept Bill
+              Prepare
+            </v-btn>
+
+            <v-btn
+              color="purple"
+              text
+              @click="complete(index)"
+            >
+              Complete
+            </v-btn>
+
+            <v-btn
+              color="purple"
+              text
+              @click="take(index)"
+            >
+              Take
             </v-btn>
 
             <v-spacer></v-spacer>
 
             <v-btn
               icon
-              @click="show = !show"
+              @click="selectedIdx = (index === selectedIdx ? null : index) "
             >
-              <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+              <v-icon>{{ selectedIdx == index ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
             </v-btn>
           </v-card-actions>
 
           <v-expand-transition>
-            <div v-show="show">
+            <div v-show="selectedIdx == index">
               <v-divider></v-divider>
               <v-card
                 v-for="(food, idx) in item"
@@ -74,7 +96,7 @@
                     {{food.name}}
                   </v-card-title>
                   <v-card-subtitle>
-                    Quantity: {{food.quantity}}
+                    Quantity: {{ food.quantity }}
                   </v-card-subtitle>
                   </v-col>
                 </v-row>
@@ -95,16 +117,43 @@ import http from '../../http'
 
 export default {
   data: () => ({
-    show: false,
+    show: null,
     ordersDetail: [],
-    imgsrc: ''
+    imgsrc: '',
+    selectedIdx : null
   }),
-
+  methods : {
+    paid(index) {
+      let orderID = this.$store.state.orders[index].id
+      http.server.get('manager/order/paid/' + orderID).then((response) => {
+        console.log(response)
+      })
+    },
+    prepare(index) {
+      let orderID = this.$store.state.orders[index].id
+      http.server.get('manager/order/cook/' + this.$store.state.account.vendorID).then((response) => {
+        console.log(response, orderID)
+      })
+    },
+    complete(index) {
+      let orderID = this.$store.state.orders[index].id
+      http.server.get('manager/order/complete/' + this.$store.state.account.vendorID + '/' + orderID).then((response) => {
+        console.log(response, orderID)
+      })
+    },
+    take(index) {
+      let orderID = this.$store.state.orders[index].id
+      http.server.get('manager/order/take/' + this.$store.state.account.vendorID + '/' + orderID).then((response) => {
+        console.log(response, orderID)
+      })
+    }
+  },
   created() {
     this.$store.state.orders= []
     http.server.get('manager/unpaidorder/' + this.$store.state.account.vendorID)
       .then((response) => response.data)
       .then((orders) => {
+        console.log(orders)
         const arrOrders = Object.keys(orders).map(i => Object.assign({}, {'id': i}, orders[i]))
         arrOrders.forEach((item) => {
           let listFoods = []
