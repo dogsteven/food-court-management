@@ -4,20 +4,25 @@ import Menu from '../views/menu'
 import ItemDetail from '../views/menu/item-detal'
 import SignIn from '../views/sign-in'
 import Order from '../views/order'
+import ImageUploader from '../views/image-uploader'
+import Account from '../views/account'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/sign-in',
+    name: 'SignInView',
     component: SignIn
   },
   {
     path: '/item-detail/:id',
+    name: 'ItemDetailView',
     component: ItemDetail
   },
   {
     path: '/menu',
+    name: 'MenuView',
     component: Menu
   },
   {
@@ -25,9 +30,19 @@ const routes = [
     component: Order
   },
   {
+    path: '/image-uploader',
+    name: 'ImageUploaderView',
+    component: ImageUploader
+  },
+  {
+    path: '/account',
+    name: 'AccountView',
+    component: Account
+  },
+  {
     path: '*',
     redirect: '/menu'
-  }
+  },
 ]
 
 const router = new VueRouter({

@@ -2,26 +2,37 @@
   <v-app>
     <v-navigation-drawer
       app
+      fixed
       v-model="isShowDrawer"
       v-if="$store.state.account.id != null">
-      
       <v-list>
         <v-list-item
-          to='/menu'>
+          to="/menu"
+          color="orange">
           <v-list-item-icon>
             <v-icon>fas fa-hamburger</v-icon>
           </v-list-item-icon>
           <v-list-item-title>Menu</v-list-item-title>
         </v-list-item>
         <v-list-item
-          to='/order'>
+          to="/order">
           <v-list-item-icon>
             <v-icon>fas fa-hamburger</v-icon>
           </v-list-item-icon>
           <v-list-item-title>Order</v-list-item-title>
         </v-list-item>
         <v-list-item
-          @click="signout">
+          @click="signout"
+          to="/image-uploader"
+          color="orange">
+          <v-list-item-icon>
+            <v-icon>fas fa-images</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Image</v-list-item-title>
+        </v-list-item>
+        <v-list-item
+          @click="signout"
+          color="orange">
           <v-list-item-icon>
             <v-icon>fas fa-sign-out-alt</v-icon>
           </v-list-item-icon>
@@ -33,6 +44,7 @@
     <v-app-bar
       app
       dark
+      color="orange"
       v-if="$store.state.account.id != null">
       <v-btn
         icon
@@ -40,14 +52,20 @@
         <v-icon>mdi-menu</v-icon>
       </v-btn>
       <v-toolbar-title>
-        {{ $route.path === '/menu' ? 'Menu' : $route.path === '/order'  ? 'Order' : ($store.state.foods[$store.state.foods.findIndex(i => i.id === $route.params.id)].name) }}
+        {{ toolbarTitle() }}
       </v-toolbar-title>
       <v-spacer></v-spacer>
 
       <v-icon
-        v-if="$route.path === '/menu'"
+        v-if="$route.name === 'MenuView'"
         @click="addNewFoodItem">
         mdi-plus
+      </v-icon>
+
+      <v-icon
+        v-if="$route.name === 'ItemDetailView'"
+        @click="removeItem($route.params.id)">
+        mdi-delete
       </v-icon>
     </v-app-bar>
 
@@ -65,6 +83,31 @@ export default {
   name: 'App',
 
   methods: {
+    toolbarTitle() {
+      if (this.$route.name === 'Order')
+        return 'Order'
+      if (this.$route.name === 'MenuView')
+        return 'Menu'
+      if (this.$route.name === 'ImageUploaderView')
+        return "Image Uploader"
+      if (this.$route.name === 'ItemDetailView')
+        return this.$store.state.foods[this.$store.state.foods.findIndex(i => i.id === this.$route.params.id)].name
+    },
+    
+    removeItem(id) {
+      let username = this.$store.state.account.username
+      let password = this.$store.state.account.password
+      http.server.delete('manager/food-item/' + username + '/' + password + '/' + id)
+        .then((response) => response.data)
+        .then((res) => {
+          if (res.status === true) {
+            let index = this.$store.state.foods.findIndex((item) => item.id === id)
+            this.$store.commit('removeFoodItem', index)
+            this.$router.replace('/menu')
+          }
+        })
+    },
+
     signout() {
       let emptyAccount = {
         id: null,

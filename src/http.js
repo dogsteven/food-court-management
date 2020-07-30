@@ -1,16 +1,18 @@
 import axios from 'axios'
 
-let serverURL = "http://localhost:8000/api/"
+
 
 export default {
     server: {
+        serverURL : "http://localhost:80/api/",
+        
         /**
          * 
          * @param {string} route 
          * @param {import('axios').AxiosRequestConfig} config 
          */
         get(route, config = null) {
-            return axios.get(serverURL + route, config)
+            return axios.get(this.serverURL + route, config)
         },
 
         /**
@@ -20,7 +22,7 @@ export default {
          * @param {import('axios').AxiosRequestConfig} config 
          */
         post(route, data = null, config = null) {
-            return axios.post(serverURL + route, data, config)
+            return axios.post(this.serverURL + route, data, config)
         },
 
         /**
@@ -30,7 +32,7 @@ export default {
          * @param {import('axios').AxiosRequestConfig} config 
          */
         put(route, data = null, config = null) {
-            return axios.put(serverURL + route, data, config)
+            return axios.put(this.serverURL + route, data, config)
         },
 
         /**
@@ -39,7 +41,7 @@ export default {
          * @param {import('axios').AxiosRequestConfig} config 
          */
         delete(route, config) {
-            return axios.delete(serverURL + route, config)
+            return axios.delete(this.serverURL + route, config)
         }
     },
 

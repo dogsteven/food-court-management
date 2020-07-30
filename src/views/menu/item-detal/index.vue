@@ -1,9 +1,11 @@
 <template>
   <v-container>
-    <v-card>
+    <v-card
+      max-width="600"
+      class="mx-auto">
       <v-img
         :src="photo"
-        max-height="200">
+        aspect-ratio="1">
       </v-img>
       <v-card-title>
         <v-text-field
@@ -40,15 +42,7 @@
             <v-btn
               text
               block
-              color="red"
-              @click="remove">
-              Remove
-            </v-btn>
-          </v-col>
-          <v-col>
-            <v-btn
-              text
-              block
+              dark
               color="green"
               @click="update">
               Save
@@ -58,6 +52,7 @@
             <v-btn
               text
               block
+              dark
               color="primary"
               @click="$router.replace('/menu')">
               Cancel
@@ -77,7 +72,7 @@
           color="error"
           v-bind="attrs"
           @click="isShowAlert = false">
-          Closes
+          Close
         </v-btn>
       </template>
     </v-snackbar>
@@ -109,33 +104,21 @@ export default {
         .then((res) => {
           if (res.status === true) {
             this.$store.commit('modifyFoodItem', { id: this.id, ...data })
+            http.server.put('manager/food-item/' + username + '/' + password + '/' + this.id + '/increaseQuantity/' + this.quantityInput, {}, config)
+              .then((response) => response.data)
+              .then((res) => {
+                if (res.status === true) {
+                  let amount = Number(this.quantityInput)
+                  this.$store.commit('increaseFoodItemQuantity', { id: this.id, amount: amount })
+                  this.quantity += amount
+                  this.quantityInput = 0
+                }
+              })
             this.isShowAlert = true
           }
         })
 
-      http.server.put('manager/food-item/' + username + '/' + password + '/' + this.id + '/' + this.quantityInput, {}, config)
-        .then((response) => response.data)
-        .then((res) => {
-          if (res.status === true) {
-            let amount = Number(this.quantityInput)
-            this.$store.commit('increaseFoodItemQuantity', { id: this.id, amount: amount })
-            this.quantity += amount
-          }
-        })
-    },
-
-    remove() {
-      let username = this.$store.state.account.username
-      let password = this.$store.state.account.password
-      http.server.delete('manager/food-item/' + username + '/' + password + '/' + this.id)
-        .then((response) => response.data)
-        .then((res) => {
-          if (res.status === true) {
-            let index = this.$store.state.foods.findIndex((item) => item.id === this.id)
-            this.$store.commit('removeFoodItem', index)
-            this.$router.replace('/menu')
-          }
-        })
+      
     }
   },
 
