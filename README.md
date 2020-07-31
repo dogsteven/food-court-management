@@ -16,8 +16,8 @@ Hệ thống này hi vọng có thể tiết kiệm tối đa thời gian đặt
 ### Đây là phần mềm dành cho các nhân viên tại cửa hàng
 > Hãy làm theo các bước sau để cài đặt 
 ```bash
-git clone github.com/dogsteven/FoodCourt
-cd FoodCourt
+git clone github.com/dogsteven/food-court-management
+cd food-court-management
 npm install
 npm audit fix
 npm run build
