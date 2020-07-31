@@ -5,6 +5,7 @@ import ItemDetail from '../views/menu/item-detal'
 import SignIn from '../views/sign-in'
 import ImageUploader from '../views/image-uploader'
 import Account from '../views/account'
+import Demo from '../views/demo'
 
 Vue.use(VueRouter)
 
@@ -33,6 +34,11 @@ const routes = [
     path: '/account',
     name: 'AccountView',
     component: Account
+  },
+  {
+    path: '/demo',
+    name: 'Demo',
+    component: Demo
   },
   {
     path: '*',

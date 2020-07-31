@@ -23,14 +23,6 @@
           <v-list-item-title>Image</v-list-item-title>
         </v-list-item>
         <v-list-item
-          to="/account"
-          color="orange">
-          <v-list-item-icon>
-            <v-icon>fas fa-user-alt</v-icon>
-          </v-list-item-icon>
-          <v-list-item-title>Account</v-list-item-title>
-        </v-list-item>
-        <v-list-item
           @click="signout"
           color="orange">
           <v-list-item-icon>

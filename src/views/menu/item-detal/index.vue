@@ -115,6 +115,8 @@ export default {
                 }
               })
             this.isShowAlert = true
+          } else {
+            alert('Food Item with name ' + this.name + ' is not exist!')
           }
         })
 
