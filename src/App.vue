@@ -22,7 +22,6 @@
           <v-list-item-title>Order</v-list-item-title>
         </v-list-item>
         <v-list-item
-          @click="signout"
           to="/image-uploader"
           color="orange">
           <v-list-item-icon>
